@@ -10,7 +10,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketAddress;
+import java.net.SocketException;
 
 /**
  * Created by turambar on 06/03/2017.
@@ -18,8 +21,8 @@ import java.net.Socket;
 
 public class Cliente {
     /* generar procedimiento para que te conectes al IP local si estás conectado al wi-fi de la fábrica, y al externo de lo contrario  */
-    //public static final String SERVER_IP = "201.139.98.214"; //server IP address
-    public static final String SERVER_IP = "192.168.1.10"; //server IP address
+    public static final String SERVER_IP = "201.139.98.214"; //server IP address
+    //public static final String SERVER_IP = "192.168.1.10"; //server IP address
     public static final int SERVER_PORT = 3214;
 
     /** ends message received notifications*/
@@ -30,6 +33,8 @@ public class Cliente {
 
     private boolean mRun = false;
     // used to send messages
+
+    private boolean mAplicacionSalioAntesDeConectarse = false;
 
     private PrintWriter mBufferOut;
     // used to read messages from the server
@@ -64,7 +69,9 @@ public class Cliente {
 
         mRun = false;
         try {
-            socket_.close();
+            if (socket_ != null) {
+                socket_.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -92,6 +99,14 @@ public class Cliente {
 
             //create a socket to make the connection with the server
             socket_ = new Socket(serverAddr, SERVER_PORT);
+            try{
+                /*Puede arrojar java.net.SocketException: Already connected*/
+                socket_.connect(new InetSocketAddress(serverAddr, SERVER_PORT) );
+            }
+            catch (Exception e)
+            {
+                Log.e("TCP", "Excepcion conectando: ", e);
+            }
 
             try {
                 //sends the message to the server
