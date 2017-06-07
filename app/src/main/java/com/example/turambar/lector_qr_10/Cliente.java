@@ -109,6 +109,7 @@ public class Cliente {
             }
 
             try {
+
                 //sends the message to the server
                 mBufferOut = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket_.getOutputStream())), true);
 

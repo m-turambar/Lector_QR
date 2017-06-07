@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Lector_QR_1.0</string>
+    <string name="mover">Mover</string>
+    <string name="cancelar">Cancelar</string>
 </resources>
